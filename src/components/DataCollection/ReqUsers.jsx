@@ -23,24 +23,20 @@ export function GetEvent(data, instance, accounts){
                 callForEvent(res.accessToken, user.userPrincipalName, user.accountEnabled).then((res) => {
                     if(res.value === undefined || res === false){
                     } else{
-                        console.log(user.displayName + " # " + user.userPrincipalName + " | " + res?.value[0].subject + " _ " + res?.value[1].subject)
-                        console.log(res.value[0])
-                        
+                        return(
+                            console.log(res)
+                        )
                     }
                 })
             })
         })
-        return(
-           <div>
-                <h1>hej1</h1>
-           </div>
-        )
+
     }
 
 export function GetUsers(props){
     //creates an object with instance and accounts that are authenticated.
     const { instance, accounts } = useMsal();
-    CallUser();
+    console.log(CallUser());
     function CallUser(){
         const request = {
             ...loginRequest,
@@ -49,19 +45,21 @@ export function GetUsers(props){
         //uses instance to acquire an access token, and takes out request, and reponds with an access token if one is available.
         instance.acquireTokenSilent(request).then((res) => { //Pass the response into an arrow function that calls the callForUser-function and passes the accesstoken as an argument.
             callForUser(res.accessToken).then((res) => { //Pass the reponse from callForUsers into an arrow functio and passes the response, instance and account as arguments.
-                GetEvent(res.value, instance, accounts)
+                return GetEvent(res.value, instance, accounts)
             })
         }).catch((e) =>{
         //if we cant acquire silently, then we acquire one by popup.
         instance.acquireTokenPopup(request).then((res) => {
             callForUser(res.accessToken).then((res) => {
-                GetEvent(res.value);
+                return GetEvent(res.value);
             })
         })
         })
     }
     return(
-        <></>
+        <>
+            <h1>{CallUser}</h1>
+        </>
     )
 }
 
