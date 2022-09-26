@@ -38,6 +38,7 @@ export function GetEvent(data, instance, accounts){
     }
 
 export function GetUsers(props){
+    //creates an object with instance and accounts that are authenticated.
     const { instance, accounts } = useMsal();
     CallUser();
     function CallUser(){
@@ -45,12 +46,13 @@ export function GetUsers(props){
             ...loginRequest,
             account: accounts[0]
         };
-    
-        instance.acquireTokenSilent(request).then((res) => {
-            callForUser(res.accessToken).then((res) => {
+        //uses instance to acquire an access token, and takes out request, and reponds with an access token if one is available.
+        instance.acquireTokenSilent(request).then((res) => { //Pass the response into an arrow function that calls the callForUser-function and passes the accesstoken as an argument.
+            callForUser(res.accessToken).then((res) => { //Pass the reponse from callForUsers into an arrow functio and passes the response, instance and account as arguments.
                 GetEvent(res.value, instance, accounts)
             })
         }).catch((e) =>{
+        //if we cant acquire silently, then we acquire one by popup.
         instance.acquireTokenPopup(request).then((res) => {
             callForUser(res.accessToken).then((res) => {
                 GetEvent(res.value);
@@ -59,14 +61,12 @@ export function GetUsers(props){
         })
     }
     return(
-        <div>
-            <GetEvent />
-        </div>
+        <></>
     )
 }
 
 export const ReqUsers = () => {
-    //Bruger Msal (Microsfot Authentication Library.)
+    //Use Msal (Microsfot Authentication Library.)
     const { instance } = useMsal();
     return (
         //Button class imported from react-boostrap
