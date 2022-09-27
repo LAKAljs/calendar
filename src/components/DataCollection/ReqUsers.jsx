@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from '../../AuthenticationFolder/authConfig'
 import Button from "react-bootstrap/Button"
@@ -35,30 +36,37 @@ export function GetEvent(data, instance, accounts){
 
 export function GetUsers(props){
     //creates an object with instance and accounts that are authenticated.
+    let eventArr = [];
     const { instance, accounts } = useMsal();
-    console.log(CallUser());
-    function CallUser(){
-        const request = {
-            ...loginRequest,
-            account: accounts[0]
-        };
-        //uses instance to acquire an access token, and takes out request, and reponds with an access token if one is available.
-        instance.acquireTokenSilent(request).then((res) => { //Pass the response into an arrow function that calls the callForUser-function and passes the accesstoken as an argument.
-            callForUser(res.accessToken).then((res) => { //Pass the reponse from callForUsers into an arrow functio and passes the response, instance and account as arguments.
-                return GetEvent(res.value, instance, accounts)
+    //console.log(currentUser);
+    const request = {
+        ...loginRequest,
+        account: accounts[0]
+    };
+    //uses instance to acquire an access token, and takes out request, and reponds with an access token if one is available.
+    instance.acquireTokenSilent(request).then((res) => { //Pass the response into an arrow function that calls the callForUser-function and passes the accesstoken as an argument.
+        callForUser(res.accessToken).then((res) => { //Pass the reponse from callForUsers into an arrow functio and passes the response, instance and account as arguments.
+            GetEvent(res.value, instance, accounts).then((res) => {
+                eventArr.push(res);
+                console.log("and2");
             })
-        }).catch((e) =>{
-        //if we cant acquire silently, then we acquire one by popup.
-        instance.acquireTokenPopup(request).then((res) => {
-            callForUser(res.accessToken).then((res) => {
-                return GetEvent(res.value);
-            })
+            .catch((e) => console.log("an error has occured"));
         })
+    }).catch((e) =>{
+    //if we cant acquire silently, then we acquire one by popup.
+    instance.acquireTokenPopup(request).then((res) => {
+        callForUser(res.accessToken).then((res) => {
+            GetEvent(res.value, instance, accounts).then((res) => {
+                eventArr.push(res);
+                console.log("and2")
+            });
         })
-    }
+    })
+    })
+
     return(
         <>
-            <h1>{CallUser}</h1>
+        <h1>hej</h1>
         </>
     )
 }
