@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function RenderMeeting(props) {
+export function RenderMeeting(props) {
   return (
     <div>
-        <h1>{props.name}</h1>
+       <h1>Hej</h1>
     </div>
   )
 }

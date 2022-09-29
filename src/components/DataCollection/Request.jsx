@@ -1,18 +1,7 @@
 import React from "react";
-import { useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from '../../AuthenticationFolder/authConfig'
-import Button from "react-bootstrap/Button"
 import { callForUser, callForEvent } from "./GraphCalls"
-import RenderMeeting from "../RenderComponents/RenderMeeting";
-
-function handleLogin(instance) {
-    //Handles login and catches exceptions
-    instance.loginRedirect(loginRequest).catch(e => {
-        console.error(e);
-    });
-}
-
 export function GetEvent(data, instance, accounts){
     const request = {
         ...loginRequest,
@@ -24,13 +13,15 @@ export function GetEvent(data, instance, accounts){
                 callForEvent(res.accessToken, user.userPrincipalName, user.accountEnabled).then((res) => {
                     if(res.value === undefined || res === false){
                     } else{
-                        return(
-                            console.log(res)
-                        )
+                        console.log(user.displayName)
                     }
                 })
             })
         })
+
+        return(
+            <></>
+            )
 
     }
 
@@ -48,7 +39,6 @@ export function GetUsers(props){
         callForUser(res.accessToken).then((res) => { //Pass the reponse from callForUsers into an arrow functio and passes the response, instance and account as arguments.
             GetEvent(res.value, instance, accounts).then((res) => {
                 eventArr.push(res);
-                console.log("and2");
             })
             .catch((e) => console.log("an error has occured"));
         })
@@ -58,7 +48,6 @@ export function GetUsers(props){
         callForUser(res.accessToken).then((res) => {
             GetEvent(res.value, instance, accounts).then((res) => {
                 eventArr.push(res);
-                console.log("and2")
             });
         })
     })
@@ -69,13 +58,4 @@ export function GetUsers(props){
         <h1>hej</h1>
         </>
     )
-}
-
-export const ReqUsers = () => {
-    //Use Msal (Microsfot Authentication Library.)
-    const { instance } = useMsal();
-    return (
-        //Button class imported from react-boostrap
-        <Button className="ml-auto" onClick={() => handleLogin(instance)}>Sign in using Redirect</Button>
-    );
 }
