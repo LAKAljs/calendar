@@ -1,9 +1,12 @@
 import React from 'react'
+import { GetUsers } from '../DataCollection/Request'
 
-export function RenderMeeting(props) {
+export const RenderMeeting = (props) => {
+  console.log(GetUsers())
   return (
-    <div>
-       <h1>Hej</h1>
-    </div>
+    <>
+    <h1>Hseass</h1>
+    </>
   )
 }
+

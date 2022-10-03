@@ -10,7 +10,7 @@ export async function callForUser(accessToken){
         headers: headers
     };
     //endpoint points to, users ordered by name, and returns each user with accountEnabled, start, end, name, email as elements within the objects.
-    const endpoint = "https://graph.microsoft.com/v1.0/users?$orderby=displayName&$select=accountEnabled,start,end,displayName,userPrincipalName";
+    const endpoint = "https://graph.microsoft.com/v1.0/users?$orderby=displayName&$select=accountEnabled,start,end,displayName,userPrincipalName&$top=999";
     
     //returns the api response
     return fetch(endpoint, options)
@@ -19,7 +19,7 @@ export async function callForUser(accessToken){
 }
 
 // exports funciton that takes an acess token, a user and the accountEnabled bool. 
-export async function callForEvent(accessToken, user, accountEnabled){
+export async function callForEvent(accessToken, user){
     const headers = new Headers();
     const bearer = `bearer ${accessToken}`;
     headers.append("Authorization", bearer);
@@ -31,18 +31,14 @@ export async function callForEvent(accessToken, user, accountEnabled){
 
     //points to a users events, ordered by start time and end time - and only returns the top 2 results.
     const endpoint = `https://graph.microsoft.com/v1.0/users/${user}/events?$orderby=start/dateTime,end/dateTime%20asc&$filter=start/dateTime%20ge%20'2022-09-19T11:00'&$top=2`;
-    if(user.length > 12 || user.length < 11 || accountEnabled === false){
-        return ('The user is out of Scope ');
-    } else {
         return fetch(endpoint, options)
         .then(response => {
-            //reponse.ok returns a boolean based on wether the response was successful or not.
+            //reponse.ok returns a boolean based on wether the response was successful or not..
             if(response.ok){
-                console.log('it returned successfully. V');
+                //console.log('it returned successfully. V');
                 return response.json();
             } else {
-                console.log('it did not return successfully!');
+                //console.log('it did not return successfully!');
                 return false;
             }})
     }
-}
