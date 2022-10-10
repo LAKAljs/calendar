@@ -5,10 +5,10 @@ import { GetUsers } from './components/DataCollection/Request';
 import { RenderMeeting } from "./components/RenderComponents/RenderMeeting";
 
 function App() {
+  RenderMeeting()
   return (
     <div className="App">
       <AuthenticatedTemplate>
-        <RenderMeeting text="hej"/>
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <ReqUsers/>

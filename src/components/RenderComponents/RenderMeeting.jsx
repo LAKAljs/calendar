@@ -1,12 +1,14 @@
 import React from 'react'
 import { GetUsers } from '../DataCollection/Request'
+import { useEffect, useState } from 'react';
 
 export const RenderMeeting = (props) => {
-  console.log(GetUsers())
-  return (
-    <>
-    <h1>Hseass</h1>
-    </>
-  )
+  var x = [];
+  GetUsers().then(res => {res.map((data) => {
+    console.log(data);
+    x.push(data);
+  })});
+  setTimeout(()=>{
+    return x;
+  }, 5000)
 }
-

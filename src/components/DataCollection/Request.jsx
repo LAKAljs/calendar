@@ -16,11 +16,9 @@ export async function GetUsers(){
     var tokenProm = instance.acquireTokenSilent(request).then(async (res) => {return res.accessToken});
     tokenProm = await tokenProm;
 
-    var usersEvents = callForUser(tokenProm).then((res) => {
-        GetEvent(res.value, instance, accounts);
+    var usersEvents = await callForUser(tokenProm).then((res) => {
+        return GetEvent(res.value, instance, accounts);
     })
-
-    
     return usersEvents
 
     /* //uses instance to acquire an access token, and takes out request, and reponds with an access token if one is available.

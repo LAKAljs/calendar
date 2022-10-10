@@ -23,11 +23,10 @@ export async function GetEvent (data, instance, accounts){
 
   var events = await Promise.all(usersSorted.map((user) => {
     return callForEvent(tokenProm, user.userPrincipalName).then((res) => {
-      return res.value
+      return [res.value, user.displayName]
     })
   }))
 
-  events = events.filter((elem) => {return elem !== undefined})
-
+  events = events.filter((elem) => {return elem[0] !== undefined})
   return events
 }
