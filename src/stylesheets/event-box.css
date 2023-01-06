@@ -1,0 +1,31 @@
+.NA{
+    background: red;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+}
+
+.columns{
+    column-count: 2;
+}
+
+.nToday{
+    background-color: green;
+}
+
+.noEvents{
+    background-color: green;
+}
+
+.today{
+    background-color: orange;
+}
+
+.personBox{
+    margin: 5px;
+    border-collapse: separate;
+    border-radius: 20px;
+}

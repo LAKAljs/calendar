@@ -1,38 +1,125 @@
-import React from "react";
+import { useState } from 'react';
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from '../../AuthenticationFolder/authConfig'
 import { callForUser } from "./GraphCalls"
 import { GetEvent } from "./GetEvent";
+import { useEffect } from "react";
 
-export async function GetUsers(){
+import Moment from 'moment/moment';
+import '../../stylesheets/event-box.css'
+
+export function GetUsers(){        
     //creates an object with instance and accounts that are authenticated.
     const { instance, accounts } = useMsal();
-    //console.log(currentUser);
+
+    const [event, setEvent] = useState([]);
+  
+    var time = Moment().format('MMM DD, YYYY HH:mm:ss');
+
     const request = {
         ...loginRequest,
         account: accounts[0]
     };
 
-    var tokenProm = instance.acquireTokenSilent(request).then(async (res) => {return res.accessToken});
-    tokenProm = await tokenProm;
+    useEffect(() => {
+        const interval = setInterval(() => {
+            time = Moment().format('MMM DD, YYYY HH:mm:ss')
+            events();
+        }, 10000);
+        return () => clearInterval(interval);
+    });
 
-    var usersEvents = await callForUser(tokenProm).then((res) => {
-        return GetEvent(res.value, instance, accounts);
-    })
-    return usersEvents
+    const events = async () =>{
+        var tokenProm = instance.acquireTokenSilent(request).then(async (res) => {return res.accessToken});
+        tokenProm = await tokenProm;
+    
+        const users = await callForUser(tokenProm);
 
-    /* //uses instance to acquire an access token, and takes out request, and reponds with an access token if one is available.
-    instance.acquireTokenSilent(request).then((res) => { //Pass the response into an arrow function that calls the callForUser-function and passes the accesstoken as an argument.
-        callForUser(res.accessToken).then(async (res) => { //Pass the reponse from callForUsers into an arrow functio and passes the response, instance and account as arguments.
-           return await GetEvent(res.value, instance, accounts)
-        })
-    }).catch((e) =>{
-    //if we cant acquire silently, then we acquire one by popup.
-    console.log('popup')
-    instance.acquireTokenPopup(request).then((res) => {
-        callForUser(res.accessToken).then((res) => {
-            console.log(GetEvent(res.value, instance, accounts).ok)
-        })
-    })
-    }) */
+        const response = await GetEvent(users, instance, accounts);
+        setEvent(await response);
+    }
+
+    function handleChange(event){
+        setTeam(event.target.value);
+    }
+
+    const [team, setTeam] = useState(["alle"]);
+    
+     return(
+        <div>
+            <div>
+                <form>
+                    <label> Vælg Team </label>
+                    <select defaultValue={"alle"} onChange={handleChange}>
+                        <option value="Dagpengeteam" >DP</option>
+                        <option value="Kontaktcenter">KT</option>
+                        <option value="IT-afdelingen">IT</option>
+                        <option value="Administrationsafdelingen">Administration</option>
+                        <option value="Konsulentteam">Konsulentteam</option>
+                        <option value="Forsikringsteamet">Forsikringsteam</option>
+                        <option value="Juridisk team">Juridisk team</option>
+                        <option value="alle">Alle</option>
+                    </select>
+                </form>
+            </div>
+            <div className="grid">
+             {event.map((data, index) => {
+                console.log(data);
+                if(data[2] !== null){
+                    if(typeof data[0][0] === "object"){
+                        var Availabilty = Moment(data[0][0].start.dateTime).add(30,'minutes').isAfter(Moment());  
+                        var inSes = Moment(data[0][0].start.dateTime).isAfter(Moment());     
+                        //if start date is same as today, and startdate + 30 min is later than now.
+                        if(Moment(data[0][0].start.dateTime).isSame(Moment(), 'day') && Availabilty){
+                            return(
+                                <div className="personBox today" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
+                                    <div>
+                                        <p className="list-group-event">{data[1]}</p>
+                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).add(1, 'hour').format('HH:mm')}</p>
+                                        <p>{data[2]}</p>
+                                        <br></br>
+                                    </div>
+                                </div>
+                            )
+                        } if(Moment(data[0][0].start.dateTime).isSame(Moment(), 'day') && inSes){
+                            return(
+                                <div className="personBox NA" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
+                                    <div>
+                                        <p className="list-group-event">{data[1]}</p>
+                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).add(1, 'hour').format('HH:mm')}</p>
+                                        <p>Time To: {Moment().to(Moment(data[0][0].start.dateTime).add(1,'hour').format('DD MMMM YYYY HH:mm'))}</p>
+                                        <br></br>
+                                    </div>
+                                </div>
+                            )
+                        } if(!Moment(data[0][0].start.dateTime).isSame(Moment(), 'day')){
+                            return(
+                                <div className="personBox nToday" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
+                                    <div>
+                                        <p className="list-group-event">{data[1]}</p>
+                                        <p>Ingen møder i dag!</p>
+                                        <p>{data[2]}</p>
+                                        <br></br>
+                                    </div>
+                                </div>
+                            )
+                        } 
+                    }if(data[0][0] === undefined){
+                        return(
+                            <div className="personBox noEvents" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
+                                <div>
+                                    <p className="list-group-event">{data[1]}</p>
+                                    <p>Ingen møder i dag!</p>
+                                    <p>{data[2]}</p>
+                                    <br></br>
+                                </div>
+                            </div>
+                        )
+                    }
+                }
+                
+             })}
+             </div>
+     </div>
+     )
 }
