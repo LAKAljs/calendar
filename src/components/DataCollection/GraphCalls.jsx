@@ -24,15 +24,18 @@ export async function callForEvent(accessToken, user){
     const headers = new Headers();
     const bearer = `bearer ${accessToken}`;
     headers.append("Authorization", bearer);
-    const time = Moment().tz('Europe/Copenhagen').format('YYYY-MM-DDTHH:MM:ss');
-    console.log(time)
+    const startTime = Moment().tz('Europe/Copenhagen').format('YYYY-MM-DDTHH:MM:ss');
+    const endTime = Moment().tz('Europe/Copenhagen').format('YYYY-MM-DD') + "T23:50:00";
+    
+    //console.log(startTime + ", -- , " + endTime);
+    //console.log(Moment().format('YYYY-MM-DD'))
 
     const options = {
         method: "GET",
         headers: headers
     };
 
-    const endpoint = `https://graph.microsoft.com/v1.0/users/${user}/calendarview?startdatetime=${time}&enddatetime=2023-01-12&$top=1`;
+    const endpoint = `https://graph.microsoft.com/v1.0/users/${user}/calendarview?startdatetime=${startTime}&enddatetime=${endTime}&$top=1`;
     return fetch(endpoint, options, user)
     .then(response => {return response.json()});
     }

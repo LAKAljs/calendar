@@ -8,10 +8,6 @@
     grid-auto-rows: auto;
 }
 
-.columns{
-    column-count: 2;
-}
-
 .nToday{
     background-color: green;
 }

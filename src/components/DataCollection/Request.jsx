@@ -69,16 +69,14 @@ export function GetUsers(){
                 if(data[2] !== null){
                     if(typeof data[0][0] === "object"){
 
-                        var today = Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').isSame(Moment(), 'day') && Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').add(30,'minutes').isAfter(Moment());
+                        var today = Moment(data[0][0].start.dateTime).utcOffset(2).isSame(Moment(), 'day') && Moment(data[0][0].start.dateTime).utcOffset(2).add(30,'minutes').isAfter(Moment().utcOffset(2));
 
-                        var closeTo = Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').isSame(Moment(), 'day') && Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').isAfter(Moment().add(30, 'min'));  
+                        var closeTo = Moment(data[0][0].start.dateTime).utcOffset(2).isSame(Moment(), 'day') && Moment(data[0][0].start.dateTime).utcOffset(2).isAfter(Moment().utcOffset(2).add(30, 'min'));  
 
-                        var inSes = Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').isSame(Moment(), 'day') && Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').isBefore(Moment()) && Moment(data[0][0].end.datetime).isAfter(Moment()); 
+                        var inSes = Moment(data[0][0].start.dateTime).utcOffset(2).isSame(Moment(), 'day') && (Moment(data[0][0].start.dateTime).utcOffset(2).isSameOrBefore(Moment().utcOffset(2)) && Moment(data[0][0].end.dateTime).utcOffset(2).isAfter(Moment().utcOffset(2))); 
 
-                        var notToday = !Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').isSame(Moment(), 'day');
-
-                        console.log(data[1] + ', ' + inSes+ ', ' + today + ', ' + closeTo+ ', ' + notToday);
-
+                        var notToday = !Moment(data[0][0].start.dateTime).utcOffset(2).isSame(Moment(), 'day');
+                        console.log(data[1] + " Tid: " + Moment(data[0][0].start.dateTime).utcOffset(2).isSameOrBefore(Moment().fo) + " Tiderne: " +  Moment(data[0][0].start.dateTime).utcOffset(2).format('HH:mm') + ", " + Moment().format('HH:mm'));
 
                         //Der er et møde i dag!
                         if(today){
@@ -86,8 +84,7 @@ export function GetUsers(){
                                 <div className="personBox today" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
                                     <div>
                                         <p className="list-group-event">{data[1]}</p>
-                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').format('HH:mm')}</p>
-                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').format('HH:mm')}</p>
+                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).utcOffset(2).format('HH:mm')}</p>
                                         <p>{data[2]}</p>
                                         <br></br>
                                     </div>
@@ -98,8 +95,8 @@ export function GetUsers(){
                                 <div className="personBox NA" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
                                     <div>
                                         <p className="list-group-event">{data[1]}</p>
-                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').tz('Europe/Copenhagen').format('HH:mm')}</p>
-                                        <p>Time To: {Moment().to(Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').format('DD MMMM YYYY HH:mm'))}</p>
+                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).utcOffset(2).format('HH:mm')}</p>
+                                        <p>Møde slutter: {Moment(data[0][0].end.dateTime).utcOffset(2).format('HH:mm')}</p>
                                         <br></br>
                                     </div>
                                 </div>
@@ -120,7 +117,7 @@ export function GetUsers(){
                                 <div className="personBox closeTo" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
                                     <div>
                                         <p className="list-group-event">{data[1]}</p>
-                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).tz('Europe/Copenhagen').format('HH:mm')}</p>
+                                        <p>Møde start klokken: {Moment(data[0][0].start.dateTime).utcOffset(2).format('HH:mm')}</p>
                                         <p>{data[2]}</p>
                                         <br></br>
                                     </div>

@@ -26,12 +26,12 @@ export async function GetEvent (data, instance, accounts){
       if(res.value !== undefined){
         return [res.value, user.displayName, user.department]
       }
-      else {
+      else{
         return [[], user.displayName, user.department]
       }
     })
   }))
 
-  events = events.filter((elem) => {return elem[0] !== undefined})
+  events = events.filter((elem) => {return elem[0] !== undefined && elem[1] !== "Jesper Nygaard Nielsen" && elem[1] !== "Finn Vedersø"})
   return events
 }
