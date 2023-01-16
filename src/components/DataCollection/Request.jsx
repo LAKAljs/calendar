@@ -65,9 +65,9 @@ export function GetUsers(){
             </div>
             <div className="grid">
              {event.map((data, index) => {
-                console.log(data);
                 if(data[2] !== null){
                     if(typeof data[0][0] === "object"){
+                        console.log(data[0][0].showAs === "free");
 
                         var today = Moment(data[0][0].start.dateTime).utcOffset(2).isSame(Moment(), 'day') && Moment(data[0][0].start.dateTime).utcOffset(2).add(30,'minutes').isAfter(Moment().utcOffset(2));
 
@@ -90,7 +90,7 @@ export function GetUsers(){
                                     </div>
                                 </div>
                             )
-                        } else if(inSes){
+                        } else if(inSes && data[0][0].showAs !== "free"){
                             return(
                                 <div className="personBox NA" id={data[2]} key={index} hidden={data[2] === team || team === "alle" ? false : true}>
                                     <div>

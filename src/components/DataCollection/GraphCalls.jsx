@@ -35,7 +35,7 @@ export async function callForEvent(accessToken, user){
         headers: headers
     };
 
-    const endpoint = `https://graph.microsoft.com/v1.0/users/${user}/calendarview?startdatetime=${startTime}&enddatetime=${endTime}&$top=1`;
+    const endpoint = `https://graph.microsoft.com/v1.0/users/${user}/calendarview?startdatetime=${startTime}&enddatetime=${endTime}&$top=10`;
     return fetch(endpoint, options, user)
     .then(response => {return response.json()});
     }
