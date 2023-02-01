@@ -32,6 +32,8 @@ export async function GetEvent (data, instance, accounts){
     })
   }))
 
-  events = events.filter((elem) => {return elem[0] !== undefined && elem[1] !== "Jesper Nygaard Nielsen" && elem[1] !== "Finn Vedersø"})
+  var bannedNames = ["Jesper Nygaard Nielsen", "Finn Vedersø", "Scan-k32", "Scan-reception", "Scan-Risskov", "Økonomiafdelingen - Indbakke"]
+
+  events = events.filter((elem) => {return !bannedNames.includes(elem[1])})
   return events
 }

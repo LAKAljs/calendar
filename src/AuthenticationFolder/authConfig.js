@@ -2,7 +2,7 @@ export const msalConfig = {
     auth: {
       clientId: "1833a2e5-046e-411b-a7ff-8d83110406a5",
       authority: "https://login.microsoftonline.com/f2e253d3-223d-4221-9f4e-26a8f31c7bd6/", // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})
-      redirectUri: "http://localhost:3001",
+      redirectUri: "http://localhost:3000",
       authTenant: "common"
     },
     cache: {
@@ -13,7 +13,7 @@ export const msalConfig = {
   
   // Add scopes here for ID token to be used at Microsoft identity platform endpoints.
   export const loginRequest = {
-   scopes: ["User.Read"]
+   scopes: ["User.Read"],
   };
   
   // Add the endpoints here for Microsoft Graph API services you'd like to use.

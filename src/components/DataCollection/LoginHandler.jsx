@@ -4,10 +4,11 @@ import { loginRequest } from '../../AuthenticationFolder/authConfig'
 import Button from "react-bootstrap/Button"
 
 function handleLogin(instance) {
-    //Handles login and catches exceptions
+        //Handles login and catches exceptions
     instance.loginRedirect(loginRequest).catch(e => {
         console.error(e);
     });
+    
 }
 
 

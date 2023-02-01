@@ -24,11 +24,8 @@ export async function callForEvent(accessToken, user){
     const headers = new Headers();
     const bearer = `bearer ${accessToken}`;
     headers.append("Authorization", bearer);
-    const startTime = Moment().tz('Europe/Copenhagen').format('YYYY-MM-DDTHH:MM:ss');
+    const startTime = Moment().tz('Europe/Copenhagen').format('YYYY-MM-DD') + "T01:00:00";
     const endTime = Moment().tz('Europe/Copenhagen').format('YYYY-MM-DD') + "T23:50:00";
-    
-    //console.log(startTime + ", -- , " + endTime);
-    //console.log(Moment().format('YYYY-MM-DD'))
 
     const options = {
         method: "GET",
